@@ -34,7 +34,10 @@ namespace BeANativeBot
             if (await result)
             {
                 await context.PostAsync($"I help you find the most attraction places around you." + Environment.NewLine + Environment.NewLine +
-                    "I love to learn your interests and suggest places accordingly");
+                    "I love to learn your interests and suggest places accordingly" + Environment.NewLine + Environment.NewLine +
+                    "You can ask me to : " + Environment.NewLine + Environment.NewLine + 
+                    "   Show places around hyderabad" + Environment.NewLine + Environment.NewLine + 
+                    "   Explain the significance of charminar" + Environment.NewLine + Environment.NewLine);
             }
             else
             {
@@ -76,7 +79,7 @@ namespace BeANativeBot
         [LuisIntent("Response")]
         public async Task UserAcceptance(IDialogContext context, LuisResult result)
         {
-            await context.PostAsync($"Hope you will enjoy atleast few of them...");
+            await context.PostAsync($"Hope you will enjoy atleast few of my suggestions...");
         }
         /*
         private async Task ConfirmAboutPrompt(IDialogContext context, IAwaitable<bool> result)
