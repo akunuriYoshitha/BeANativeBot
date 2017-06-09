@@ -22,9 +22,8 @@ namespace BeANativeBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                LuisDialogs ld = new LuisDialogs();
-                ld.LuisDialogs_initialize(activity.Text);
-                await Conversation.SendAsync(activity, () => ld);
+                
+                await Conversation.SendAsync(activity, () => new LuisDialogs(activity.Text.ToString()));
             }
             else
             {

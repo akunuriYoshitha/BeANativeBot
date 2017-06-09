@@ -19,7 +19,7 @@ namespace Be_A_Native
     public class Location
     {
         public double lat { get; set; }
-        public double lng { get; set; }
+        public double lng { get; set; }  
     }
 
     public class Geometry
@@ -117,6 +117,7 @@ namespace Be_A_Native
         public HttpVerb Method { get; set; }
         public string ContentType { get; set; }
         public string PostData { get; set; }
+        public static string placeId;
 
         public RestClient()//constructor for initialization
         {
@@ -151,6 +152,7 @@ namespace Be_A_Native
 
                     latitude = city_obj.results[0].geometry.location.lat;//extraction of latitude from city object root obj -> results[0] -> geometry ->location -> lat see response
                     longitude = city_obj.results[0].geometry.location.lng;
+                    placeId = city_obj.results[0].place_id;
 
                 }
             }
@@ -159,9 +161,8 @@ namespace Be_A_Native
             List<string> Types = new List<string> { };//types of data we want to extract from places types supported are given in place types website
             Types.Add("museum");
             Types.Add("zoo");
-            Types.Add("hindu_temple");
+            Types.Add("stadium");
             Types.Add("shopping_mall");
-            Types.Add("church");
             Types.Add("art_gallery");
             foreach (string type in Types)//make one request for each type 
             {
@@ -201,6 +202,12 @@ namespace Be_A_Native
             }
 
             return res_final;//final output or response code
+        }
+
+        public string retPlaceID(string placeName)
+        {
+            MakeRequest(placeName);
+            return placeId;
         }
 
     } // class
