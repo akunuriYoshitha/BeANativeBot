@@ -77,6 +77,7 @@ namespace BeANativeBot
     }
     public class TextSearch
     {
+        public static List<string> place_details = new List<string>();
         public static List<string> references = new List<string>();
         public HttpVerb Method { get; set; }
         public string ContentType { get; set; }
@@ -93,7 +94,7 @@ namespace BeANativeBot
         {
 
             List<Attachment> types = new List<Attachment>();
-            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyD1b_W1ZNFeS57kcXnP3ng6558hobsST6Y&query=" + category + "+in+" + placeName;
+            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&query=" + category + "+in+" + placeName;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ts_url);//making a http web request
             request.Method = Method.ToString();
             using (HttpWebResponse res = (HttpWebResponse)request.GetResponse())
@@ -142,7 +143,7 @@ namespace BeANativeBot
         public string getReference(int index)
         {
             System.Diagnostics.Debug.WriteLine(references[index]);
-            return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=AIzaSyD1b_W1ZNFeS57kcXnP3ng6558hobsST6Y&photoreference=" + references[index];
+            return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&photoreference=" + references[index];
         }
 
         private static Attachment GetHeroCard(string title, string subtitle, string text, List<CardAction> cardAction)
@@ -158,9 +159,9 @@ namespace BeANativeBot
             return heroCard.ToAttachment();
         }
 
-        public void searchPlace(string placeName)
+        public List<string> searchPlace(string placeName)
         {
-            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyD1b_W1ZNFeS57kcXnP3ng6558hobsST6Y&query=" + placeName;
+            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&query=" + placeName;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ts_url);//making a http web request
             request.Method = Method.ToString();
             using (HttpWebResponse res = (HttpWebResponse)request.GetResponse())
@@ -172,8 +173,29 @@ namespace BeANativeBot
                                                     //the response we get is in the form of a json but converted to string when we get, this is serialization
                                                     //once we get the string form of data we convert it into jason to access internal class objects and data,this is called deserialization
                 RootObject_ts places_ts = JsonConvert.DeserializeObject<RootObject_ts>(places);//Root object of city deserialization of json data
+                
+                foreach (var r in places_ts.results)
+                {
+                    r.name = r.name.ToLower();
+                    if (r.name.Equals(placeName.ToLower()))
+                    {
+                        place_details.Add(r.place_id);
+                        place_details.Add(r.name);
+                        place_details.Add("ADDRESS : " + r.formatted_address);
+                        try
+                        {
+                            place_details.Add(r.photos[0].photo_reference);
+                        }
+                        catch (Exception e)
+                        {
+                            place_details.Add(" ");
+                        }
+                    }
+                    
 
+                }
             }
+            return place_details;
         }
     }
 }

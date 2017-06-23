@@ -481,11 +481,13 @@ namespace BeANativeBot
             {
                 placename = rec.Entity;
                 await context.PostAsync($"place : " + placename);
+
             }
             else
             {
                 await context.PostAsync($"Please enter your place ");
             }
+
             context.Wait(MessageReceived);
         }
 

@@ -118,7 +118,7 @@ namespace BeANativeBot
 
         public void makeRequest(string placeId)
         {
-            string ts_url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyD1b_W1ZNFeS57kcXnP3ng6558hobsST6Y&placeid=" + placeId;
+            string ts_url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&placeid=" + placeId;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ts_url);//making a http web request
             request.Method = Method.ToString();
             using (HttpWebResponse res = (HttpWebResponse)request.GetResponse())
