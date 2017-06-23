@@ -196,14 +196,17 @@ namespace BeANativeBot
 
         public Attachment displayPlaceDetails(string placeName)
         {
+            System.Diagnostics.Debug.WriteLine(placeName);
             Random rnd = new Random();
             int rk = rnd.Next(keys.Count);
             string key = keys[rk];
             List<string> initialDetails = new List<string>();
             TextSearch ts = new TextSearch();
             initialDetails = ts.searchPlace(placeName);
+            System.Diagnostics.Debug.WriteLine(placeName);
             string placeId = initialDetails[0];
             placeName = initialDetails[1];
+            System.Diagnostics.Debug.WriteLine(placeName);
             string address = initialDetails[2];
             string photoRef = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=" + key +"&photoreference=" + initialDetails[3];
             makeRequest(placeId);

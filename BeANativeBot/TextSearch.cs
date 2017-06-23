@@ -174,6 +174,7 @@ namespace BeANativeBot
 
         public List<string> searchPlace(string placeName)
         {
+            System.Diagnostics.Debug.WriteLine(placeName);
             Random rnd = new Random();
             int rk = rnd.Next(keys.Count);
             string key = keys[rk];
@@ -189,7 +190,7 @@ namespace BeANativeBot
                                                     //the response we get is in the form of a json but converted to string when we get, this is serialization
                                                     //once we get the string form of data we convert it into jason to access internal class objects and data,this is called deserialization
                 RootObject_ts places_ts = JsonConvert.DeserializeObject<RootObject_ts>(places);//Root object of city deserialization of json data
-                
+                place_details.Clear();
                 foreach (var r in places_ts.results)
                 {
                     r.name = r.name.ToLower();
