@@ -100,6 +100,13 @@ namespace BeANativeBot
     }
     public class PlaceDetails
     {
+        public static List<string> keys = new List<string>
+        {
+            "AIzaSyCEcSwhhCMO8L-rb-nERCXw4bpC2qA_Gno",
+            "AIzaSyBQo1JlbpQyB-Ip28zey6zQ0RsE7klEDqo",
+            "AIzaSyAic7iByLYCk0r9IwsGhrFdQUVKABW8om0",
+            "AIzaSyD2jHO-vBqhB3g34E286pQzlnmSfvfFBKo"
+        };
         public static List<Review_pd> userReviews = new List<Review_pd>();
         public static string phoneNum = "Not Available";
         public static string placeName;
@@ -118,7 +125,10 @@ namespace BeANativeBot
 
         public void makeRequest(string placeId)
         {
-            string ts_url = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&placeid=" + placeId;
+            Random rnd = new Random();
+            int rk = rnd.Next(keys.Count);
+            string key = keys[rk];
+            string ts_url = "https://maps.googleapis.com/maps/api/place/details/json?key=" + key + "&placeid=" + placeId;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ts_url);//making a http web request
             request.Method = Method.ToString();
             using (HttpWebResponse res = (HttpWebResponse)request.GetResponse())
@@ -146,7 +156,7 @@ namespace BeANativeBot
             string subtitle = "CONTACT NUMBER :  " + phoneNum;
             CardImage cardImage = new CardImage(url: photoReference);
             CardAction cardButton = new CardAction(ActionTypes.OpenUrl, " Get directions to visit place ", value: url);
-            Attachment detailsCard = GetHeroCard(title, subtitle, cardImage, cardButton);
+            Attachment detailsCard = GetHeroCard(title, subtitle, "", cardImage, cardButton);
             return detailsCard;
         }
 
@@ -170,17 +180,37 @@ namespace BeANativeBot
             return review;
         }
 
-        private static Attachment GetHeroCard(string title, string subtitle, CardImage cardImage, CardAction cardAction)
+        private static Attachment GetHeroCard(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction)
         {
             var heroCard = new HeroCard
             {
                 Title = title,
                 Subtitle = subtitle,
+                Text = text,
                 Images = new List<CardImage>() { cardImage },
                 Buttons = new List<CardAction>() { cardAction },
             };
 
             return heroCard.ToAttachment();
+        }
+
+        public Attachment displayPlaceDetails(string placeName)
+        {
+            Random rnd = new Random();
+            int rk = rnd.Next(keys.Count);
+            string key = keys[rk];
+            List<string> initialDetails = new List<string>();
+            TextSearch ts = new TextSearch();
+            initialDetails = ts.searchPlace(placeName);
+            string placeId = initialDetails[0];
+            placeName = initialDetails[1];
+            string address = initialDetails[2];
+            string photoRef = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=" + key +"&photoreference=" + initialDetails[3];
+            makeRequest(placeId);
+            CardImage cardImage = new CardImage(url: photoRef);
+            CardAction cardButton = new CardAction(ActionTypes.OpenUrl, " Get directions to visit place ", value: url);
+            Attachment detailsCard = GetHeroCard(placeName, "CONTACT NUMBER : " + phoneNum, address, cardImage, cardButton);
+            return detailsCard;
         }
     }
 }

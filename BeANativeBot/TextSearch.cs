@@ -77,6 +77,14 @@ namespace BeANativeBot
     }
     public class TextSearch
     {
+        public static List<string> keys = new List<string>
+        {
+            "AIzaSyCEcSwhhCMO8L-rb-nERCXw4bpC2qA_Gno",
+            "AIzaSyBQo1JlbpQyB-Ip28zey6zQ0RsE7klEDqo",
+            "AIzaSyAic7iByLYCk0r9IwsGhrFdQUVKABW8om0",
+            "AIzaSyD2jHO-vBqhB3g34E286pQzlnmSfvfFBKo"
+        };
+
         public static List<string> place_details = new List<string>();
         public static List<string> references = new List<string>();
         public HttpVerb Method { get; set; }
@@ -92,9 +100,11 @@ namespace BeANativeBot
 
         public List<Attachment> makeRequest(string placeName, string category)
         {
-
+            Random rnd = new Random();
+            int rk = rnd.Next(keys.Count);
+            string key = keys[rk];
             List<Attachment> types = new List<Attachment>();
-            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&query=" + category + "+in+" + placeName;
+            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + key + "&query=" + category + "+in+" + placeName;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ts_url);//making a http web request
             request.Method = Method.ToString();
             using (HttpWebResponse res = (HttpWebResponse)request.GetResponse())
@@ -142,8 +152,11 @@ namespace BeANativeBot
 
         public string getReference(int index)
         {
-            System.Diagnostics.Debug.WriteLine(references[index]);
-            return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&photoreference=" + references[index];
+            Random rnd = new Random();
+            int rk = rnd.Next(keys.Count);
+            string key = keys[rk];
+            //System.Diagnostics.Debug.WriteLine(references[index]);
+            return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=" + key + "&photoreference=" + references[index];
         }
 
         private static Attachment GetHeroCard(string title, string subtitle, string text, List<CardAction> cardAction)
@@ -161,7 +174,10 @@ namespace BeANativeBot
 
         public List<string> searchPlace(string placeName)
         {
-            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDe5LtdaLd1wLrIbZlP3Erq3hnFQplfQHo&query=" + placeName;
+            Random rnd = new Random();
+            int rk = rnd.Next(keys.Count);
+            string key = keys[rk];
+            string ts_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + key + "&query=" + placeName;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ts_url);//making a http web request
             request.Method = Method.ToString();
             using (HttpWebResponse res = (HttpWebResponse)request.GetResponse())

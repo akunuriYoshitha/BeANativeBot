@@ -58,7 +58,7 @@ namespace BeANativeBot
         private IEnumerable<string> devinePlaces = new List<string> { Temples, Churches, Mosques };
         private IEnumerable<string> EducationCat = new List<string> { Schools, Inter, Engineering, Medical, Polytechnic, Library, BookStores };
         private IEnumerable<string> ShoppingPlaces = new List<string> { ShoppingMalls, JewelryStores, MobileStores, CarLeasing };
-        private IEnumerable<string> SpaPlaces = new List<string> { Temples, Churches, Mosques };
+        private IEnumerable<string> SpaPlaces = new List<string> { BeautyParlour, Salons, Gym };
         private IEnumerable<string> TourismPlaces = new List<string> { Museums, Zoos, ArtGalleries, Parks, Resorts, FamousPlaces };
 
         public string message;
@@ -81,7 +81,7 @@ namespace BeANativeBot
             if (await result)
             {
                 await context.PostAsync($"I help you find the most attraction places around you." + Environment.NewLine + Environment.NewLine +
-                    "I love to learn your interests and suggest places accordingly" + Environment.NewLine + Environment.NewLine +
+                    "" + Environment.NewLine + Environment.NewLine +
                     "For example, You can ask me to : " + Environment.NewLine + Environment.NewLine + 
                     "   Show places around hyderabad" + Environment.NewLine + Environment.NewLine + 
                     "   Give the details of charminar" + Environment.NewLine + Environment.NewLine);
@@ -481,7 +481,14 @@ namespace BeANativeBot
             {
                 placename = rec.Entity;
                 await context.PostAsync($"place : " + placename);
-
+                PlaceDetails pd = new PlaceDetails();
+                var attachment = pd.displayPlaceDetails(placename);
+                Activity msg = (Activity)context.MakeMessage();
+                msg.Recipient = msg.Recipient;
+                msg.Type = "message";
+                msg.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                msg.Attachments.Add(attachment);
+                await context.PostAsync(msg);
             }
             else
             {
