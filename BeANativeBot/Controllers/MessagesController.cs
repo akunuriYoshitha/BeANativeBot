@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using Microsoft.Bot.Builder.Dialogs;
+using System.Collections.Generic;
 
 namespace BeANativeBot
 {
@@ -22,7 +23,29 @@ namespace BeANativeBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                
+                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                Activity reply = activity.CreateReply($"");
+                Activity reply1 = activity.CreateReply($"");
+                if (activity.Text.Contains("Place Id : "))
+                {
+
+                    var place_id = activity.Text.ToString().Substring(11, activity.Text.ToString().Length - 11);
+                    int index = (int)Char.GetNumericValue(place_id[0]);
+                    TextSearch ts = new TextSearch();
+
+                    string refe = ts.getReference(index);
+                    PlaceDetails pd = new PlaceDetails();
+                    Attachment attachment = pd.makeCard(refe, place_id.Substring(1, place_id.Length - 1));
+                    reply.Attachments = new List<Attachment>();
+                    reply.Attachments.Add(attachment);
+                    await connector.Conversations.ReplyToActivityAsync(reply);
+                    string review = pd.GetReviews(place_id.Substring(1, place_id.Length - 1));
+                    reply1 = activity.CreateReply($"" + review);
+                    await connector.Conversations.ReplyToActivityAsync(reply1);
+                    var res = Request.CreateResponse(HttpStatusCode.OK);
+                    return res;
+                }
+
                 await Conversation.SendAsync(activity, () => new LuisDialogs(activity.Text.ToString()));
             }
             else

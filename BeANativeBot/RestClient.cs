@@ -126,7 +126,7 @@ namespace Be_A_Native
             PostData = "";
         }
 
-        public string MakeRequest(String cityname)//making two requests 1. lalng extraction 2.places search based on latlong
+        public string MakeRequest(String cityname, string type)//making two requests 1. lalng extraction 2.places search based on latlong
         {
             Double latitude;
             Double longitude;
@@ -158,12 +158,49 @@ namespace Be_A_Native
             }
             String res_str = "";
             String res_final = "";
-            List<string> Types = new List<string> { };//types of data we want to extract from places types supported are given in place types website
+
+
+            EndPoint = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + "location=" + latitude + "," + longitude + "&radius=500&type=" + type + "&key=AIzaSyDyjc_fG7ZIBbJcE4EoTZKMDKDFENLSwdg";
+
+            HttpWebRequest request1 = (HttpWebRequest)WebRequest.Create(EndPoint);
+            request1.Method = Method.ToString();
+            using (HttpWebResponse res = (HttpWebResponse)request1.GetResponse())
+            {
+                if (res.StatusCode != HttpStatusCode.OK)
+                {
+                    return "error " + res.StatusCode.ToString();
+                }
+                Stream res_stream = res.GetResponseStream();
+
+                StreamReader st_read = new StreamReader(res_stream);
+                res_str = st_read.ReadToEnd();
+
+                RootObject r = JsonConvert.DeserializeObject<RootObject>(res_str);//google places are already sorted in the order of popularity based on some constraints
+                int flag = 0;
+                foreach (Result o in r.results)//from the results we extract places and add to the response crating a formed output
+                {
+                    if (flag == 0)//printing type of the place once 
+                    {
+                        res_final += (type.ToUpper() + Environment.NewLine + Environment.NewLine);
+                    }
+                    res_final += (o.name + Environment.NewLine + Environment.NewLine);
+                    flag++;
+
+                    if (flag == 5)//maxium or top 5 popular places are retrived
+                    {
+                        break;
+                    }
+                }
+            }
+
+
+            /*List<string> Types = new List<string> { };//types of data we want to extract from places types supported are given in place types website
             Types.Add("museum");
             Types.Add("zoo");
             Types.Add("stadium");
             Types.Add("shopping_mall");
             Types.Add("art_gallery");
+            List<string> places_list = new List<string> { };
             foreach (string type in Types)//make one request for each type 
             {
 
@@ -199,14 +236,14 @@ namespace Be_A_Native
                         }
                     }
                 }
-            }
+            }*/
 
             return res_final;//final output or response code
         }
 
         public string retPlaceID(string placeName)
         {
-            MakeRequest(placeName);
+            //MakeRequest(placeName);
             return placeId;
         }
 

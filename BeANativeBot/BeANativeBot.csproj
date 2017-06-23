@@ -130,11 +130,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="LuisDialogs.cs" />
+    <Compile Include="PlaceDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestClient.cs" />
+    <Compile Include="TextSearch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\BeANativeApplication - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\BeANativeBot - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\BeANativeBot - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\BeANativeBot - Web Deploy.pubxml" />
